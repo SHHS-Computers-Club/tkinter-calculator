@@ -36,17 +36,17 @@ class Calc:
         self.b2.grid(row=5, column=2, ipadx=15, ipady=10)
         self.b3 = Button(frame, text="3", command=lambda:self.append(3))
         self.b3.grid(row=5, column=3, ipadx=15, ipady=10)
-        self.b0 = Button(frame, text="0", command=self.append0, width=12)
+        self.b0 = Button(frame, text="0", command=lambda:self.append(0), width=12)
         self.b0.grid(row=6, column=1, ipady=10, columnspan=2)
-        self.pt = Button(frame, text=".", command=self.appendpt, width=3)
+        self.pt = Button(frame, text=".", command=lambda:self.append('.'), width=3)
         self.pt.grid(row=6, column=3, ipadx=8, ipady=10)
-        self.di = Button(frame, text="÷", command=self.appenddi, width=5)
+        self.di = Button(frame, text="÷", command=lambda:self.append('÷'), width=5)
         self.di.grid(row=2, column=4, ipady=10)
-        self.cr = Button(frame, text="×", command=self.appendcr, width=5)
+        self.cr = Button(frame, text="×", command=lambda:self.append('×'), width=5)
         self.cr.grid(row=3, column=4, ipady=10)
-        self.mn = Button(frame, text="-", command=self.appendmn, width=5)
+        self.mn = Button(frame, text="-", command=lambda:self.append('-'), width=5)
         self.mn.grid(row=4, column=4, ipady=10)
-        self.pl = Button(frame, text="+", command=self.appendpl, width=5)
+        self.pl = Button(frame, text="+", command=lambda:self.append('+'), width=5)
         self.pl.grid(row=5, column=4, ipady=10)
         self.en = Button(frame, text="=", command=self.enter, width=5)
         self.en.grid(row=6, column=4, ipady=10)
@@ -177,56 +177,13 @@ class Calc:
         self.Eq = [0]
         self.li.configure(text='0')
     ## NUMBERS ##
-    def append9(self):
+
+    def append(self,n):
         if len(self.Eq) < 25:
-            self.Eq.append(9)
+            self.Eq.append(n)
             lbl = ''.join(str(i) for i in self.Eq)
             self.li.configure(text=lbl[1:])
-    def append8(self):
-        if len(self.Eq) < 25:
-            self.Eq.append(8)
-            lbl = ''.join(str(i) for i in self.Eq)
-            self.li.configure(text=lbl[1:])
-    def append7(self):
-        if len(self.Eq) < 25:
-            self.Eq.append(7)
-            lbl = ''.join(str(i) for i in self.Eq)
-            self.li.configure(text=lbl[1:])
-    def append6(self):
-        if len(self.Eq) < 25:
-            self.Eq.append(6)
-            lbl = ''.join(str(i) for i in self.Eq)
-            self.li.configure(text=lbl[1:])
-    def append5(self):
-        if len(self.Eq) < 25:
-            self.Eq.append(5)
-            lbl = ''.join(str(i) for i in self.Eq)
-            self.li.configure(text=lbl[1:])
-    def append4(self):
-        if len(self.Eq) < 25:
-            self.Eq.append(4)
-            lbl = ''.join(str(i) for i in self.Eq)
-            self.li.configure(text=lbl[1:])
-    def append3(self):
-        if len(self.Eq) < 25:
-            self.Eq.append(3)
-            lbl = ''.join(str(i) for i in self.Eq)
-            self.li.configure(text=lbl[1:])
-    def append2(self):
-        if len(self.Eq) < 25:
-            self.Eq.append(2)
-            lbl = ''.join(str(i) for i in self.Eq)
-            self.li.configure(text=lbl[1:])
-    def append1(self):
-        if len(self.Eq) < 25:
-            self.Eq.append(1)
-            lbl = ''.join(str(i) for i in self.Eq)
-            self.li.configure(text=lbl[1:])
-    def append0(self):
-        if self.Eq != [0] and len(self.Eq) < 25:
-            self.Eq.append(0)
-            lbl = ''.join(str(i) for i in self.Eq)
-            self.li.configure(text=lbl[1:])
+
     ## SYMBOLS ##
     def appendpt(self): #DECIMAL
         

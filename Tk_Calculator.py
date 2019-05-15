@@ -36,10 +36,10 @@ class Calc:
         self.b2.grid(row=5, column=2, ipadx=15, ipady=10)
         self.b3 = Button(frame, text="3", command=lambda:self.append(3))
         self.b3.grid(row=5, column=3, ipadx=15, ipady=10)
-        self.b0 = Button(frame, text="0", command=lambda:self.append(0), width=12)
-        self.b0.grid(row=6, column=1, ipady=10, columnspan=2)
+        self.b0 = Button(frame, text="0", command=lambda:self.append(0))
+        self.b0.grid(row=6, column=1, ipadx=15, ipady=10)
         self.pt = Button(frame, text=".", command=lambda:self.append('.'), width=3)
-        self.pt.grid(row=6, column=3, ipadx=8, ipady=10)
+        self.pt.grid(row=6, column=2, ipadx=8, ipady=10)
         self.di = Button(frame, text="÷", command=lambda:self.append('÷'), width=5)
         self.di.grid(row=2, column=4, ipady=10)
         self.cr = Button(frame, text="×", command=lambda:self.append('×'), width=5)
@@ -55,7 +55,7 @@ class Calc:
     def solve(self,eqn): #parse equation
         try:
             eqn.pop(0)
-            #print(eqn)
+            print('eqn: ',eqn)
             parts = []
             Len = len(eqn)
             for i in range(Len):
@@ -71,7 +71,9 @@ class Calc:
                             del eqn[0]
             while parts.count([]) > 0:
                 parts.remove([])
-            #print(parts) 
+            print('p: ',parts)
+            if len(parts) == 1:
+                return(str(parts[0])[1:-1])
 
             while len(parts) > 1:
                 for m in range(parts.count(['.'])): #DECIMAL
@@ -82,12 +84,12 @@ class Calc:
                     parts[pt-1] = float(''.join(str(n) for n in parts[pt-1])) + mantissa
                     parts.remove(['.'])
                     parts.remove(parts[pt])
-                    # print(parts[pt-1])
-                    # print(eqn)
+                    print(parts[pt-1])
+                    print(eqn)
 
                 k = 1
                 while k in range(len(parts)): #MULTIPLICATION
-                    # print(k)
+                    print(k)
                     n1, n2 = '',''
                     if parts[k] == ['×'] or parts[k] == ['÷']:
                         # print('len:',len(parts))
@@ -155,9 +157,8 @@ class Calc:
 
                     else:
                         k += 1
-                    # print('p:',parts)
-                print(parts)
-                return(str(parts[0]))
+                    print('p:',parts)
+            return(str(parts[0]))
         except:
             return(['Error: Syntax'])
 

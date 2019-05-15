@@ -4,7 +4,7 @@ from tkinter import *
 class Calc:
     def __init__(self, master):
         root.title('Calc')
-        root.geometry('200x270')
+        root.geometry('185x270')
         frame = Frame(master=root)
         frame.pack_propagate(0)
         frame.grid()
@@ -53,107 +53,115 @@ class Calc:
         
     ### PARSE EQUATION (WIP) ###
     def solve(self,eqn): #parse equation
-        eqn.pop(0)
-        # print(eqn)
-        parts = []
-        Len = len(eqn)
-        for i in range(Len):
-            parts.append([]) #adds as many parts as characters
-        while eqn:
+        try:
+            eqn.pop(0)
+            #print(eqn)
+            parts = []
+            Len = len(eqn)
             for i in range(Len):
-                while not self.SpecKey(eqn,0):
-                    parts[i].append(eqn[0])
-                    del eqn[0]
-                if eqn:
-                    if not parts[i]:
+                parts.append([]) #adds as many parts as characters
+            while eqn:
+                for i in range(Len):
+                    while not self.SpecKey(eqn,0):
                         parts[i].append(eqn[0])
                         del eqn[0]
-        while parts.count([]) > 0:
-            parts.remove([])
-        # print(parts) 
+                    if eqn:
+                        if not parts[i]:
+                            parts[i].append(eqn[0])
+                            del eqn[0]
+            while parts.count([]) > 0:
+                parts.remove([])
+            #print(parts) 
 
-        while len(parts) > 1:
-            for m in range(parts.count(['.'])): #DECIMAL
-                pt = parts.index(['.'])
-                while parts[pt+1][-1] == 0:
-                    del parts[pt+1][-1]
-                mantissa = float(''.join(str(n) for n in parts[pt+1])) / 10 ** len(parts[pt+1])
-                parts[pt-1] = float(''.join(str(n) for n in parts[pt-1])) + mantissa
-                parts.remove(['.'])
-                parts.remove(parts[pt])
-                # print(parts[pt-1])
-                # print(eqn)
+            while len(parts) > 1:
+                for m in range(parts.count(['.'])): #DECIMAL
+                    pt = parts.index(['.'])
+                    while parts[pt+1][-1] == 0:
+                        del parts[pt+1][-1]
+                    mantissa = float(''.join(str(n) for n in parts[pt+1])) / 10 ** len(parts[pt+1])
+                    parts[pt-1] = float(''.join(str(n) for n in parts[pt-1])) + mantissa
+                    parts.remove(['.'])
+                    parts.remove(parts[pt])
+                    # print(parts[pt-1])
+                    # print(eqn)
 
-            k = 1
-            while k in range(len(parts)): #MULTIPLICATION
-                # print(k)
-                n1, n2 = '',''
-                if parts[k] == ['×'] or parts[k] == ['÷']:
-                    # print('len:',len(parts))
-                    # print('ind:',parts[k])
-                    # print('p1:',parts[k-1])
-                    if type(parts[k-1]) != float:
-                        n1 = float(''.join(str(i) for i in parts[k-1]))
-                    elif type(parts[k-1]) != n1:
-                        n1 = parts[k-1]
-                    # print('n1:',n1)
-                    # print('p2:',parts[k+1])
-                    if type(parts[k+1]) != float:
-                        n2 = float(''.join(str(i) for i in parts[k+1]))
-                    elif type(parts[k+1]) != n2:
-                        n2 = parts[k+1]
-                    # print('n2',n2)
-                    op = parts[k]
-                    ix = parts[k]
-                    del parts[k+1]
-                    if op == ['×']:
-                        parts[k-1] = float(n1*n2)
-                        # print(n1,'x',n2)
+                k = 1
+                while k in range(len(parts)): #MULTIPLICATION
+                    # print(k)
+                    n1, n2 = '',''
+                    if parts[k] == ['×'] or parts[k] == ['÷']:
+                        # print('len:',len(parts))
+                        # print('ind:',parts[k])
+                        # print('p1:',parts[k-1])
+                        if type(parts[k-1]) != float:
+                            n1 = float(''.join(str(i) for i in parts[k-1]))
+                        elif type(parts[k-1]) != n1:
+                            n1 = parts[k-1]
+                        # print('n1:',n1)
+                        # print('p2:',parts[k+1])
+                        if type(parts[k+1]) != float:
+                            n2 = float(''.join(str(i) for i in parts[k+1]))
+                        elif type(parts[k+1]) != n2:
+                            n2 = parts[k+1]
+                        # print('n2',n2)
+                        op = parts[k]
+                        ix = parts[k]
+                        del parts[k+1]
+                        if op == ['×']:
+                            parts[k-1] = float(n1*n2)
+                            # print(n1,'x',n2)
+                        else:
+                            try:
+                                parts[k-1] = float(n1/n2)
+                            except:
+                                parts = ['Error: cannot divide by zero']
+                        try:
+                            del parts[k]
+                        except:
+                            pass
+    
                     else:
-                        parts[k-1] = float(n1/n2)
-                    del parts[k]
+                        k += 1
+                    # print('p:',parts)
 
-                else:
-                    k += 1
-                # print('p:',parts)
+                k = 1
+                while k in range(len(parts)): #ADDITION
+                    # print(k)
+                    n1, n2 = '',''
+                    if parts[k] == ['+'] or parts[k] == ['-']:
+                        # print('len:',len(parts))
+                        # print('ind:',parts[k])
+                        # print('p1:',parts[k-1])
+                        if type(parts[k-1]) != float:
+                            n1 = float(''.join(str(i) for i in parts[k-1]))
+                        elif type(parts[k-1]) != n1:
+                            n1 = parts[k-1]
+                        # print('n1:',n1)
+                        # print('p2:',parts[k+1])
+                        if type(parts[k+1]) != float:
+                            n2 = float(''.join(str(i) for i in parts[k+1]))
+                        elif type(parts[k+1]) != n2:
+                            n2 = parts[k+1]
+                        # print('n2',n2)
+                        op = parts[k]
+                        ix = parts[k]
+                        del parts[k+1]
+                        if op == ['+']:
+                            parts[k-1] = float(n1+n2)
+                            # print(n1,'+',n2)
+                        else:
+                            parts[k-1] = float(n1-n2)
+                        del parts[k]
 
-            k = 1
-            while k in range(len(parts)): #ADDITION
-                # print(k)
-                n1, n2 = '',''
-                if parts[k] == ['+'] or parts[k] == ['-']:
-                    # print('len:',len(parts))
-                    # print('ind:',parts[k])
-                    # print('p1:',parts[k-1])
-                    if type(parts[k-1]) != float:
-                        n1 = float(''.join(str(i) for i in parts[k-1]))
-                    elif type(parts[k-1]) != n1:
-                        n1 = parts[k-1]
-                    # print('n1:',n1)
-                    # print('p2:',parts[k+1])
-                    if type(parts[k+1]) != float:
-                        n2 = float(''.join(str(i) for i in parts[k+1]))
-                    elif type(parts[k+1]) != n2:
-                        n2 = parts[k+1]
-                    # print('n2',n2)
-                    op = parts[k]
-                    ix = parts[k]
-                    del parts[k+1]
-                    if op == ['+']:
-                        parts[k-1] = float(n1+n2)
-                        # print(n1,'+',n2)
                     else:
-                        parts[k-1] = float(n1-n2)
-                    del parts[k]
+                        k += 1
+                    # print('p:',parts)
+                print(parts)
+                return(str(parts[0]))
+        except:
+            return(['Error: Syntax'])
 
-                else:
-                    k += 1
-                # print('p:',parts)
-                
-            return(str(parts[0]))
-
-
-        
+    
     ### SPECIAL FUNCTIONS ###
     def SpecKey(self,eqn,n): #determine if item at index n is "special" (not numerical)
         try:
@@ -161,6 +169,14 @@ class Calc:
             return(False)
         except:
             return(True)
+
+    def append(self,n):
+        if len(self.Eq) == 1 and type(n) != int:
+            self.Eq.append(0)
+        if len(self.Eq) < 25:
+            self.Eq.append(n)
+        lbl = ''.join(str(i) for i in self.Eq)
+        self.li.configure(text=lbl[1:])
 
         
     ### BUTTON COMMANDS ###
@@ -176,60 +192,25 @@ class Calc:
     def clear(self):
         self.Eq = [0]
         self.li.configure(text='0')
-    ## NUMBERS ##
-
-    def append(self,n):
-        if len(self.Eq) < 25:
-            self.Eq.append(n)
-            lbl = ''.join(str(i) for i in self.Eq)
-            self.li.configure(text=lbl[1:])
 
     ## SYMBOLS ##
-    def appendpt(self): #DECIMAL
-        
-        deca = self.Eq[:]
-        deca.reverse()
-        canplace = True
-        if deca.count('.') > 0:
-            bound = deca.index('.')
-            canplace = False
-            for i in range(0, bound-1):
-                if self.SpecKey(self.Eq,i):
-                    canplace = True
-        if self.Eq[-1] != '.' and len(self.Eq) < 25 and canplace:
-            if len(self.Eq) == 1 or self.SpecKey(self.Eq,-1):
-                self.Eq.append(0)
-            self.Eq.append('.')
-            lbl = ''.join(str(i) for i in self.Eq)
-            self.li.configure(text=lbl[1:])
-    def appendpl(self): #ADDITION
-        if not self.SpecKey(self.Eq,-1) and self.Eq != [0] and len(self.Eq) < 25:
-            self.Eq.append('+')
-            lbl = ''.join(str(i) for i in self.Eq)
-            self.li.configure(text=lbl[1:])
-    def appendmn(self): #SUBTRACTION
-        if not self.SpecKey(self.Eq,-1) and self.Eq != [0] and len(self.Eq) < 25:
-            self.Eq.append('-')
-            lbl = ''.join(str(i) for i in self.Eq)
-            self.li.configure(text=lbl[1:])
-    def appendcr(self): #MULTIPLICATION
-        if not self.SpecKey(self.Eq,-1) and self.Eq != [0] and len(self.Eq) < 25:
-            self.Eq.append('×')
-            lbl = ''.join(str(i) for i in self.Eq)
-            self.li.configure(text=lbl[1:])
-    def appenddi(self): #DIVISION
-        if not self.SpecKey(self.Eq,-1) and self.Eq != [0] and len(self.Eq) < 25:
-            self.Eq.append('÷')
-            lbl = ''.join(str(i) for i in self.Eq)
-            self.li.configure(text=lbl[1:])
             
     def enter(self): #WIP
-        if not self.SpecKey(self.Eq,-1) and self.Eq != [0] and self.Eq:
-            lbl = self.solve(self.Eq)
+        if self.Eq != [0] and self.Eq:
+            try:
+                lbl = str(self.solve(self.Eq))
+                if float(lbl) == int(float(lbl)):
+                    lbl = int(float(lbl))
+                lbl = list(str(lbl))
+            except:
+                lbl = str(lbl)
+            if lbl == "['Error: Syntax']":
+                lbl = 'Error: Syntax'
             self.Eq = [0]
             for i in lbl:
                 self.Eq.append(i)
-            self.li.configure(text=lbl)
+            lbl = ''.join(str(i) for i in lbl)
+            self.li.configure(text=str(lbl))
         #Display Ans
         
 root = Tk()

@@ -40,6 +40,8 @@ class Calc:
         self.b0.grid(row=6, column=1, ipadx=15, ipady=10)
         self.pt = Button(frame, text=".", command=lambda:self.append('.'), width=3)
         self.pt.grid(row=6, column=2, ipadx=8, ipady=10)
+        self.ans= Button(frame, text="Ans", command=self.ans, width=3)
+        self.ans.grid(row=6,column=3, ipadx=8, ipady=10)
         self.di = Button(frame, text="÷", command=lambda:self.append('÷'), width=5)
         self.di.grid(row=2, column=4, ipady=10)
         self.cr = Button(frame, text="×", command=lambda:self.append('×'), width=5)
@@ -179,6 +181,8 @@ class Calc:
         lbl = ''.join(str(i) for i in self.Eq)
         self.li.configure(text=lbl[1:])
 
+    def ans(self):
+        pass
         
     ### BUTTON COMMANDS ###
     def delete(self):

@@ -9,6 +9,8 @@ class Calc:
         frame.pack_propagate(0)
         frame.grid()
         self.Eq = [0] #Equation
+        self.Ans = [0] #Ans key
+        self.blank = True #If current display is result or input; True = result
         lbl = ''.join(str(i) for i in self.Eq)
         self.li = Label(frame, text=lbl, anchor=W) #Equation Bar
         self.li.grid(row=1, column=1, ipadx=10, ipady=10, columnspan=4)
@@ -59,11 +61,10 @@ class Calc:
             eqn.pop(0)
             print('eqn: ',eqn)
             parts = []
-            Len = len(eqn)
-            for i in range(Len):
+            for i in range(len(eqn)):
                 parts.append([]) #adds as many parts as characters
             while eqn:
-                for i in range(Len):
+                for i in range(len(eqn)):
                     while not self.SpecKey(eqn,0):
                         parts[i].append(eqn[0])
                         del eqn[0]
@@ -71,14 +72,14 @@ class Calc:
                         if not parts[i]:
                             parts[i].append(eqn[0])
                             del eqn[0]
+
             while parts.count([]) > 0:
                 parts.remove([])
             print('p: ',parts)
             if len(parts) == 1:
                 return(str(parts[0])[1:-1])
 
-            while len(parts) > 1:
-                for m in range(parts.count(['.'])): #DECIMAL
+            for m in range(parts.count(['.'])): #DECIMAL
                     pt = parts.index(['.'])
                     while parts[pt+1][-1] == 0:
                         del parts[pt+1][-1]
@@ -86,9 +87,27 @@ class Calc:
                     parts[pt-1] = float(''.join(str(n) for n in parts[pt-1])) + mantissa
                     parts.remove(['.'])
                     parts.remove(parts[pt])
-                    print(parts[pt-1])
-                    print(eqn)
+                    print('parts[pt-1]: ',parts[pt-1])
+                    print('eqn: ',eqn)
+                    print('pts: ',parts)
 
+            for m in parts: #COMBINES PIECES INTO FLOATS
+                if type(m) != list:
+                    n = list(str(m))
+                else:
+                    n = m
+                print('n: ',n)
+                try:
+                    if not SpecKey(list(n),0):
+                        n = float(''.join(str(i) for i in n))
+                except:
+                    pass
+
+            for m in parts:
+                if parts[parts.index(m)+1] == ['-']:
+                    print('!')
+            while len(parts) > 1:
+                
                 k = 1
                 while k in range(len(parts)): #MULTIPLICATION
                     print(k)
@@ -172,17 +191,6 @@ class Calc:
             return(False)
         except:
             return(True)
-
-    def append(self,n):
-        if len(self.Eq) == 1 and type(n) != int:
-            self.Eq.append(0)
-        if len(self.Eq) < 25:
-            self.Eq.append(n)
-        lbl = ''.join(str(i) for i in self.Eq)
-        self.li.configure(text=lbl[1:])
-
-    def ans(self):
-        pass
         
     ### BUTTON COMMANDS ###
     def delete(self):
@@ -197,6 +205,28 @@ class Calc:
     def clear(self):
         self.Eq = [0]
         self.li.configure(text='0')
+
+    def append(self,n):
+        if self.blank:
+            self.Eq = [0]
+        if len(self.Eq) == 1 and type(n) != int:
+            self.Eq.append(0)
+        if len(self.Eq) < 25:
+            self.Eq.append(n)
+        lbl = ''.join(str(i) for i in self.Eq)
+        self.li.configure(text=lbl[1:])
+        self.blank = False
+
+    def ans(self):
+        if not self.blank:
+            if self.Ans[0] == 0:
+                del self.Ans[0]
+            for i in self.Ans:
+                self.Eq.append(i)
+            lbl = ''.join(str(i) for i in self.Eq)
+            self.li.configure(text=lbl[1:])  
+        else:
+            self.blank = False
 
     ## SYMBOLS ##
             
@@ -214,8 +244,10 @@ class Calc:
             self.Eq = [0]
             for i in lbl:
                 self.Eq.append(i)
+            self.Ans = self.Eq[:]
             lbl = ''.join(str(i) for i in lbl)
             self.li.configure(text=str(lbl))
+            self.blank = True
         #Display Ans
         
 root = Tk()

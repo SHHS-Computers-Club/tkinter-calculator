@@ -108,15 +108,21 @@ class Calc:
                 print('M: ',m)
                 print(parts[m])
                 if parts[m] == ['-']:
-                    if self.SpecKey(parts[m-1],0):
+                    if self.SpecKey(parts[m-1],0) or m == 0:
                         print('!')
                         try:
-                            print(parts[m+1])
+                            print('m+1:',parts[m+1])
+                            err = 'err:115'
                             parts[m+1].insert(0,'-')
+                            err = 'err:116'
                             print('p: ',parts)
+                            err = 'err:117'
                             del parts[m]
                         except:
-                            print('err')
+                            if err:
+                                print(err)
+                            else:
+                                print('err')
                     else:
                         print(m)
                         m += 1
@@ -124,21 +130,23 @@ class Calc:
                     m += 1
                     print(m)
 
-                    
+            for m in range(0,len(parts)):
+                parts[m] = ''.join(str(i) for i in parts[m])
+                if len(parts[m]) > 1 and not SpecKey(parts[m],0):
+                    parts[m] = float(parts[m])
+                
             while len(parts) > 1:
                 
                 k = 1
                 while k in range(len(parts)): #MULTIPLICATION
                     print(k, parts)
                     n1, n2 = '',''
-                    if parts[k] == ['×'] or parts[k] == ['÷']:
+                    if parts[k] == '×' or parts[k] == '÷':
                         print('len:',len(parts))
                         print('ind:',parts[k])
                         print('p1:',parts[k-1])
                         if type(parts[k-1]) != float:
-                            n1 = str(''.join(str(i) for i in parts[k-1]))
-                            print('n1: ',n1)
-                            n1 = float(n1)
+                            n1 = float(parts[k-1])
                         elif type(parts[k-1]) != n1:
                             n1 = parts[k-1]
                         print('n1:',n1)
@@ -153,7 +161,7 @@ class Calc:
                         op = parts[k]
                         ix = parts[k]
                         del parts[k+1]
-                        if op == ['×']:
+                        if op == '×':
                             parts[k-1] = float(n1*n2)
                             print(n1,'x',n2)
                         else:

@@ -108,15 +108,21 @@ class Calc:
                 print('M: ',m)
                 print(parts[m])
                 if parts[m] == ['-']:
-                    if self.SpecKey(parts[m-1],0):
+                    if self.SpecKey(parts[m-1],0) or m == 0:
                         print('!')
                         try:
-                            print(parts[m+1])
+                            print('m+1:',parts[m+1])
+                            err = 'err:115'
                             parts[m+1].insert(0,'-')
+                            err = 'err:116'
                             print('p: ',parts)
+                            err = 'err:117'
                             del parts[m]
                         except:
-                            print('err')
+                            if err:
+                                print(err)
+                            else:
+                                print('err')
                     else:
                         print(m)
                         m += 1
@@ -124,7 +130,11 @@ class Calc:
                     m += 1
                     print(m)
 
-                    
+            #for m in range(0,len(parts)):
+                #parts[m] = ''.join(str(i) for i in parts[m])
+                #if len(parts[m]) > 1 and not SpecKey(parts[m],0):
+                    #parts[m] = float(parts[m])
+                
             while len(parts) > 1:
                 
                 k = 1

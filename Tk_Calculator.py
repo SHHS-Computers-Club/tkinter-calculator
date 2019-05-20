@@ -57,7 +57,7 @@ class Calc:
         
     ### PARSE EQUATION (WIP) ###
     def solve(self,eqn): #parse equation
-        try:
+        if 1==1:
             eqn.pop(0)
             print('eqn: ',eqn)
             parts = []
@@ -111,9 +111,9 @@ class Calc:
                     if self.SpecKey(parts[m-1],0) or m == 0:
                         print('!')
                         try:
-                            print('m+1:',parts[m+1])
+                            print('m+1:',type(parts[m+1]),parts[m+1])
                             err = 'err:115'
-                            parts[m+1].insert(0,'-')
+                            parts[m+1] = str('-')+str(parts[m+1])
                             err = 'err:116'
                             print('p: ',parts)
                             err = 'err:117'
@@ -124,100 +124,161 @@ class Calc:
                             else:
                                 print('err')
                     else:
-                        print(m)
+                        print('m127: ', m)
                         m += 1
                 else:
                     m += 1
-                    print(m)
-
+                    print('m131: ', m)
+            print('p132: ',parts)
             for m in range(0,len(parts)):
-                parts[m] = ''.join(str(i) for i in parts[m])
-                if len(parts[m]) > 1 and not SpecKey(parts[m],0):
+                print('134: ',parts[m])
+                if type(parts[m]) == list:
+                    parts[m] = ''.join(str(i) for i in parts[m])
+                    print('137')
+                print('lens: ',len(parts[m]))
+                print('speck: ',self.SpecKey(parts[m],0))
+                if len(parts[m]) > 1 or not self.SpecKey(parts[m],0):
+                    print('139')
                     parts[m] = float(parts[m])
-                
-            while len(parts) > 1:
-                
-                k = 1
-                while k in range(len(parts)): #MULTIPLICATION
-                    print(k, parts)
-                    n1, n2 = '',''
-                    if parts[k] == '×' or parts[k] == '÷':
-                        print('len:',len(parts))
-                        print('ind:',parts[k])
-                        print('p1:',parts[k-1])
-                        if type(parts[k-1]) != float:
-                            n1 = float(parts[k-1])
-                        elif type(parts[k-1]) != n1:
-                            n1 = parts[k-1]
-                        print('n1:',n1)
-                        print('p2:',parts[k+1])
-                        if type(parts[k+1]) != float:
-                            n2 = str(''.join(str(i) for i in parts[k+1]))
-                            print('n2: ',n2)
-                            n2 = float(n2)
-                        elif type(parts[k+1]) != n2:
-                            n2 = parts[k+1]
-                        print('n2',n2)
-                        op = parts[k]
-                        ix = parts[k]
-                        del parts[k+1]
-                        if op == '×':
-                            parts[k-1] = float(n1*n2)
-                            print(n1,'x',n2)
-                        else:
-                            try:
-                                parts[k-1] = float(n1/n2)
-                            except:
-                                parts = ['Error: cannot divide by zero']
-                        try:
-                            del parts[k]
-                        except:
-                            print('err')
-                        print('p168: ',parts)
-                    else:
-                        k += 1
+                #parts[m] = ''.join(str(i) for i in parts[m])
+                #if len(parts[m]) > 1 and not SpecKey(parts[m],0):
+                #    parts[m] = float(parts[m])
+                print('p138: ',parts)
 
-                k = 1
-                while k in range(len(parts)): #ADDITION
-                    print(k, parts)
-                    n1, n2 = '',''
-                    if parts[k] == ['+'] or parts[k] == ['-']:
-                        print('len:',len(parts))
-                        print('ind:',parts[k])
-                        print('p1:',parts[k-1])
-                        if type(parts[k-1]) != float:
-                            n1 = str(''.join(str(i) for i in parts[k-1]))
-                            print('n1: ',n1)
-                            n1 = float(n1)
-                        elif type(parts[k-1]) != n1:
-                            n1 = parts[k-1]
-                        print('n1:',n1)
-                        print('p2:',parts[k+1])
-                        if type(parts[k+1]) != float:
-                            n2 = str(''.join(str(i) for i in parts[k+1]))
-                            print('n2: ',n2)
-                            n2 = float(n2)
-                        elif type(parts[k+1]) != n2:
-                            n2 = parts[k+1]
-                        print('n2',n2)
-                        op = parts[k]
-                        ix = parts[k]
-                        del parts[k+1]
-                        if op == ['+']:
-                            parts[k-1] = float(n1+n2)
-                            print(n1,'+',n2)
-                        else:
-                            parts[k-1] = float(n1-n2)
+            k = 0
+            print(k)
+            while len(parts) > 1:
+                while k in range(0,len(parts)):
+                    del_k = True
+                    if parts[k] == '×':
+                        parts[k-1] = parts[k-1] * parts[k+1]
+                        del parts[k],parts[k+1]
+                        del_k = False
+                    elif parts[k] == '÷':
                         try:
-                            del parts[k]
+                            parts[k-1] = parts[k-1] / parts[k+1]
+                            del parts[k],parts[k+1]
+                            del_k = False
                         except:
-                            print('err')
-                        print('p205:',parts)
-                    else:
-                        k += 1
-            return(str(parts[0]))
-        except:
-            return(['Error'])
+                            parts = ['Error: cannot divide by zero']
+                    
+                    if parts[k] == '+':
+                        parts[k-1] = parts[k-1] + parts[k+1]
+                        del parts[k],parts[k+1]
+                        del_k = False
+                    elif parts[k] == '-':
+                        parts[k-1] = parts[k-1] - parts[k+1]
+                        del parts[k],parts[k+1]
+                        del_k = False
+
+                    if del_k:
+                        del k
+            return(str(parts))
+
+
+
+
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+
+
+##            while len(parts) > 1:
+##                
+##                k = 1
+##                while k in range(len(parts)): #MULTIPLICATION
+##                    print(k, parts)
+##                    n1, n2 = '',''
+##                    if parts[k] == '×' or parts[k] == '÷':
+##                        print('len:',len(parts))
+##                        print('ind:',parts[k])
+##                        print('p1:',parts[k-1])
+##                        if type(parts[k-1]) != float:
+##                            n1 = float(parts[k-1])
+##                        elif type(parts[k-1]) != n1:
+##                            n1 = parts[k-1]
+##                        print('n1:',n1)
+##                        print('p2:',parts[k+1])
+##                        if type(parts[k+1]) != float:
+##                            n2 = str(''.join(str(i) for i in parts[k+1]))
+##                            print('n2: ',n2)
+##                            n2 = float(n2)
+##                        elif type(parts[k+1]) != n2:
+##                            n2 = parts[k+1]
+##                        print('n2',n2)
+##                        op = parts[k]
+##                        ix = parts[k]
+##                        del parts[k+1]
+##                        if op == '×':
+##                            parts[k-1] = float(n1*n2)
+##                            print(n1,'x',n2)
+##                        else:
+##                            try:
+##                                parts[k-1] = float(n1/n2)
+##                            except:
+##                                parts = ['Error: cannot divide by zero']
+##                        try:
+##                            del parts[k]
+##                        except:
+##                            print('err')
+##                        print('p168: ',parts)
+##                    else:
+##                        k += 1
+##
+##                k = 1
+##                while k in range(len(parts)): #ADDITION
+##                    print(k, parts)
+##                    n1, n2 = '',''
+##                    if parts[k] == ['+'] or parts[k] == ['-']:
+##                        print('len:',len(parts))
+##                        print('ind:',parts[k])
+##                        print('p1:',parts[k-1])
+##                        if type(parts[k-1]) != float:
+##                            n1 = str(''.join(str(i) for i in parts[k-1]))
+##                            print('n1: ',n1)
+##                            n1 = float(n1)
+##                        elif type(parts[k-1]) != n1:
+##                            n1 = parts[k-1]
+##                        print('n1:',n1)
+##                        print('p2:',parts[k+1])
+##                        if type(parts[k+1]) != float:
+##                            n2 = str(''.join(str(i) for i in parts[k+1]))
+##                            print('n2: ',n2)
+##                            n2 = float(n2)
+##                        elif type(parts[k+1]) != n2:
+##                            n2 = parts[k+1]
+##                        print('n2',n2)
+##                        op = parts[k]
+##                        ix = parts[k]
+##                        del parts[k+1]
+##                        if op == ['+']:
+##                            parts[k-1] = float(n1+n2)
+##                            print(n1,'+',n2)
+##                        else:
+##                            parts[k-1] = float(n1-n2)
+##                        try:
+##                            del parts[k]
+##                        except:
+##                            print('err')
+##                        print('p205:',parts)
+##                    else:
+##                        k += 1
+##            return(str(parts[0]))
+        else:
+            return('Error')
 
     
     ### SPECIAL FUNCTIONS ###
@@ -275,8 +336,8 @@ class Calc:
                 lbl = list(str(lbl))
             except:
                 lbl = str(self.solve(self.Eq))
-            if lbl == "['Error: Syntax']":
-                lbl = 'Error: Syntax'
+            #if lbl == "['Error']":
+            #    lbl = 'Error'
             self.Eq = [0]
             for i in lbl:
                 self.Eq.append(i)
